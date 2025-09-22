@@ -1,24 +1,62 @@
-.navbar {
+/* Hamburger - visibile solo su mobile */
+.hamburger {
+  display: none; 
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 20; /* sopra tutto */
+}
+
+.hamburger .bar {
+  height: 3px;
+  width: 100%;
+  background-color: var(--text-light);
+  border-radius: 2px;
+}
+
+/* Menu normale desktop */
+.nav-links {
   display: flex;
-  align-items: center;   /* allinea verticalmente logo e menu */
-  justify-content: space-between; /* logo a sinistra, menu a destra */
-  padding: 0 20px;
-}
-
-.navbar img {
-  margin-right: 20px;
-}
-
-.navbar ul {
+  gap: 1rem;
   list-style: none;
-  display: flex;
-  gap: 20px;   /* spazio tra le voci */
   margin: 0;
   padding: 0;
 }
 
-.navbar a {
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
+/* Mobile */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary-green);
+    max-height: 0;          /* chiuso di default */
+    overflow: hidden;       /* nasconde i link */
+    transition: max-height 0.3s ease-in-out;
+    width: 100%;            /* solo tutta la larghezza */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;     /* non assoluto! così non copre la pagina */
+  }
+
+  .nav-links.open {
+    max-height: 500px;      /* si apre solo quanto serve */
+  }
+
+  .nav-links li {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .nav-links a {
+    display: block;
+    font-size: 1.2rem;
+    color: var(--text-light);
+  }
 }

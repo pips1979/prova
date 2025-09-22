@@ -1,14 +1,13 @@
-// Header.js
-import { Helmet } from "react-helmet";
+import Hero from './Hero';
+import Specials from './Specials';
+import Testimonials from './Testimonials';
 
-export default function Main() {
+export default function Main({ token }) {
   return (
     <main>
-      <Helmet>
-        <title>Home - Little Lemon</title>
-        <meta name="description" content="Benvenuto nella home del sito Little Lemon" />
-      </Helmet>
-      <h1>Benvenuto su Little Lemon</h1>
+      <Hero token={token} />
+      <Specials />
+      <Testimonials />
     </main>
   );
 }
