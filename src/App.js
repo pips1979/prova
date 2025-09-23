@@ -1,4 +1,3 @@
-
 import './App.css';
 import Header from './Header';
 import Nav from './Nav';
@@ -15,69 +14,78 @@ import { CartProvider } from "./CartContext";
 import Register from "./Register";
 import Login from "./Login";
 import Profile from "./Profile";
-import Reservation from "./Reservation"; // <-- nuova pagina
-import { useEffect, useState } from "react";
-import { getProfile } from "./Api";
+import ReservationForm from "./ReservationForm";
+import { useState } from "react";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("access_token") || null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(
+    token ? JSON.parse(localStorage.getItem("user")) : null
+  );
 
-  // recupera info utente quando cambia il token
-  useEffect(() => {
-    if (token) {
-      getProfile(token)
-        .then(res => setUser(res.data))
-        .catch(() => setUser(null));
-    } else {
-      setUser(null);
+  const handleLogin = (email, password) => {
+    const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+    const foundUser = storedUsers.find(u => u.email === email && u.password === password);
+
+    if (foundUser) {
+      const newToken = "local-" + Date.now();
+      localStorage.setItem("access_token", newToken);
+      localStorage.setItem("user", JSON.stringify(foundUser));
+      setToken(newToken);
+      setUser(foundUser);
+      return true;
     }
-  }, [token]);
+    return false;
+  };
+
+  const handleRegister = (newUser) => {
+    const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+    if (storedUsers.find(u => u.email === newUser.email)) {
+      return false; // email già esistente
+    }
+    storedUsers.push(newUser);
+    localStorage.setItem("users", JSON.stringify(storedUsers));
+
+    // auto-login dopo registrazione
+    const newToken = "local-" + Date.now();
+    localStorage.setItem("access_token", newToken);
+    localStorage.setItem("user", JSON.stringify(newUser));
+    setToken(newToken);
+    setUser(newUser);
+    return true;
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
     setToken(null);
     setUser(null);
   };
 
   return (
-    
-      <div className="App">
-        {/* Header con info utente e logout */}
-        <Header user={user} onLogout={handleLogout} />
+    <div className="App">
+      <Header user={user} onLogout={handleLogout} />
+      <Nav token={token} />
 
-        {/* Nav con link condizionali */}
-        <Nav token={token} />
+      <CartProvider>
+        <CartIcon />
 
-        <CartProvider>
-          <CartIcon />
+        <Routes>
+          <Route path="/" element={<Main token={token} />} />
+          <Route path="/specials" element={<Specials />} />
+          <Route path="/dish/:dishName" element={<DishDetail />} />
+          <Route path="/cart" element={<CartPage />} />
 
-          <Routes>
-            <Route path="/" element={<Main token={token} />} />
-            <Route path="/specials" element={<Specials />} />
-            <Route path="/dish/:dishName" element={<DishDetail />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/login" element={<Login setToken={setToken} />} />
-            <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login handleLogin={handleLogin} setUser={setUser} setToken={setToken} />} />
+          <Route path="/register" element={<Register handleRegister={handleRegister} setUser={setUser} setToken={setToken} />} />
 
-            {/* Profilo protetto */}
-            <Route
-              path="/profile"
-              element={token ? <Profile token={token} /> : <Login setToken={setToken} />}
-            />
+          <Route path="/profile" element={token ? <Profile user={user} /> : <Login handleLogin={handleLogin} setUser={setUser} setToken={setToken} />} />
+          <Route path="/reservation" element={token ? <ReservationForm user={user} /> : <Login handleLogin={handleLogin} setUser={setUser} setToken={setToken} />} />
+        </Routes>
+      </CartProvider>
 
-            {/* Pagina prenotazioni protetta */}
-            <Route
-              path="/reservation"
-              element={token ? <Reservation token={token} /> : <Login setToken={setToken} />}
-            />
-          </Routes>
-        </CartProvider>
-
-        <Footer />
-      </div>
-    
+      <Footer />
+    </div>
   );
 }
 

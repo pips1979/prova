@@ -277,3 +277,77 @@ body {
 .dish-detail button:hover {
   transform: scale(1.05);
 }
+/* Reservation Page */
+.reservation-page {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: var(--primary-green); /* sfondo verde come le card */
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  color: var(--text-light); /* testo bianco */
+}
+
+.reservation-form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.reservation-form label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  color: var(--primary-yellow); /* etichette gialle */
+}
+
+.reservation-form input,
+.reservation-form select {
+  padding: 0.6rem;
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.reservation-form input:focus,
+.reservation-form select:focus {
+  outline: none;
+  border-color: var(--primary-yellow);
+  box-shadow: 0 0 4px var(--primary-yellow);
+}
+
+/* Bottoni coerenti con il sito */
+.btn-primary {
+  background-color: var(--primary-yellow);
+  color: var(--primary-green);
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #e6be0e; /* giallo più scuro */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* rosso per delete */
+  color: var(--text-light);
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-danger:hover {
+  background-color: #b52b3a;
+}
+
+.message {
+  margin-top: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--primary-yellow);
+}

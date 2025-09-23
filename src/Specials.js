@@ -2,6 +2,7 @@ import salad from './assets/greek salad.jpg';
 import bruschetta from './assets/bruschetta.svg';
 import dessert from './assets/lemon dessert.jpg';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from "react-helmet"; // 👈 importa Helmet
 const dishes = [
   { name: 'Greek Salad', img: salad },
   { name: 'Bruschetta', img: bruschetta },
@@ -13,6 +14,16 @@ export default function Specials() {
 
   return (
     <section className="specials">
+      {/* 👇 Helmet qui dentro: vale solo per questa pagina */}
+      <Helmet>
+        <title>Specials plates to order at Little Lemon</title>
+        <meta 
+          name="description" 
+          content="Scopri i nostri piatti speciali: Greek Salad, Bruschetta e Lemon Dessert, solo da Little Lemon!" 
+        />      
+        <meta name="og:title" content="Specials plates to order at Little Lemon"/>
+        <meta name="og:description" content="Menù with specials plates highlightened"/>
+      </Helmet>
       <h2>Specials</h2>
       <div className="specials-grid">
         {dishes.map((dish) => (

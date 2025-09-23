@@ -1,17 +1,11 @@
-
 import { useNavigate } from "react-router-dom";
 
-export default function Hero({ token }) {
+export default function Hero({ token, availableTimes }) {
   const navigate = useNavigate();
 
   const handleReserveClick = () => {
-    if (token) {
-      // se loggato → vai a reservations
-      navigate("/reservation");
-    } else {
-      // se non loggato → vai a login
-      navigate("/login");
-    }
+    // se vuoi gestione login: if(token){...} else navigate("/login")
+    navigate("/reservation", { state: { availableTimes } });
   };
 
   return (

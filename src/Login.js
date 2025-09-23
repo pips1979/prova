@@ -1,49 +1,59 @@
 import { useState } from "react";
-import { loginUser } from "./Api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Login({ setToken }) {
+export default function Login({ handleLogin, setToken, setUser }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const res = await loginUser(form);
-      localStorage.setItem("access_token", res.data.access);
-      localStorage.setItem("refresh_token", res.data.refresh);
-      setToken(res.data.access);
-      setMessage("Login effettuato!");
-    } catch (err) {
+    const success = handleLogin(form.email, form.password);
+    if (success) {
+      setMessage("Login effettuato con successo!");
+      navigate("/"); // vai alla home
+    } else {
       setMessage("Email o password non validi");
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="reservation-page">
+      <form className="reservation-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
-        <input 
-          name="email" 
-          placeholder="Email" 
-          value={form.email} 
-          onChange={handleChange} 
-        />
-        <input 
-          name="password" 
-          type="password" 
-          placeholder="Password" 
-          value={form.password} 
-          onChange={handleChange} 
-        />
-        <button type="submit">Login</button>
-        <p>{message}</p>
+
+        <div className="form-group">
+          <label>Email:</label>
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Password:</label>
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn-primary">Login</button>
+        {message && <p className="message">{message}</p>}
       </form>
-      <p>
-        Non sei ancora registrato?{" "}
-        <Link to="/register">Clicca qui per registrarti</Link>
+
+      <p style={{ textAlign: "center", marginTop: "1rem" }}>
+        Non sei ancora registrato? <Link to="/register">Registrati qui</Link>
       </p>
     </div>
   );
