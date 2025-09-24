@@ -79,12 +79,12 @@ function App() {
           <Route path="/login" element={<Login handleLogin={handleLogin} setUser={setUser} setToken={setToken} />} />
           <Route path="/register" element={<Register handleRegister={handleRegister} setUser={setUser} setToken={setToken} />} />
 
-          <Route path="/profile" element={token ? <Profile user={user} /> : <Login handleLogin={handleLogin} setUser={setUser} setToken={setToken} />} />
+          
           <Route path="/reservation" element={token ? <ReservationForm user={user} /> : <Login handleLogin={handleLogin} setUser={setUser} setToken={setToken} />} />
         </Routes>
       </CartProvider>
 
-      <Footer />
+      
     </div>
   );
 }

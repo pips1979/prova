@@ -1,24 +1,73 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ReservationForm from "./ReservationForm";
+import * as api from "./apiesterna"; // importa tutto per spyOn
 
-const mockTimes = ["17:00", "18:00", "19:00", "20:00"];
+beforeEach(() => {
+  localStorage.clear();
+  jest.clearAllMocks();
+});
 
-describe("ReservationForm", () => {
-  test("renders the Date input", () => {
-    render(<ReservationForm initialTimes={mockTimes} />);
-    expect(screen.getByLabelText(/Date:/i)).toBeInTheDocument();
-  });
+// ---------------------------
+// Test HTML5 validation
+// ---------------------------
+test("applica gli attributi HTML5 corretti", () => {
+  render(<ReservationForm initialTimes={["18:00"]} />);
 
-  test("renders the Book button", () => {
-    render(<ReservationForm initialTimes={mockTimes} />);
-    const buttonElement = screen.getByRole("button", { name: /Book/i });
-    expect(buttonElement).toBeInTheDocument();
-  });
+  const dateInput = screen.getByLabelText(/date/i);
+  const timeSelect = screen.getByLabelText(/hour/i);
+  const guestsInput = screen.getByLabelText(/guests number/i);
+  const occasionSelect = screen.getByLabelText(/occasion/i);
 
-  test("renders available time options", () => {
-    render(<ReservationForm initialTimes={mockTimes} />);
-    mockTimes.forEach(time => {
-      expect(screen.getByRole("option", { name: time })).toBeInTheDocument();
-    });
-  });
+  expect(dateInput).toHaveAttribute("required");
+  expect(timeSelect).toHaveAttribute("required");
+  expect(guestsInput).toHaveAttribute("min", "1");
+  expect(guestsInput).toHaveAttribute("max", "10");
+  expect(occasionSelect).toHaveAttribute("required");
+});
+
+// ---------------------------
+// Test salvataggio su localStorage
+// ---------------------------
+
+
+// ---------------------------
+// Test caricamento prenotazione salvata
+// ---------------------------
+test("mostra prenotazione salvata da localStorage", () => {
+  localStorage.setItem(
+    "reservation",
+    JSON.stringify({
+      date: "2025-09-23",
+      time: "19:00",
+      guests: 3,
+      occasion: "Anniversary",
+    })
+  );
+
+  render(<ReservationForm initialTimes={["18:00", "19:00"]} />);
+
+  expect(screen.getByText(/Booking management/i)).toBeInTheDocument();
+  expect(screen.getByText(/Anniversary/i)).toBeInTheDocument();
+});
+
+// ---------------------------
+// Test cancellazione prenotazione
+// ---------------------------
+test("cancella prenotazione quando si clicca delete", () => {
+  localStorage.setItem(
+    "reservation",
+    JSON.stringify({
+      date: "2025-09-23",
+      time: "19:00",
+      guests: 3,
+      occasion: "Anniversary",
+    })
+  );
+
+  render(<ReservationForm initialTimes={["18:00", "19:00"]} />);
+  const deleteBtn = screen.getByRole("button", { name: /delete reservation/i });
+  fireEvent.click(deleteBtn);
+
+  expect(localStorage.getItem("reservation")).toBeNull();
+  expect(screen.getByRole("button", { name: /book/i })).toBeInTheDocument();
 });

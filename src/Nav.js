@@ -22,7 +22,7 @@ export default function Nav({ token }) {
         {/* Menu */}
         <ul className={`nav-links ${menuOpen ? 'open' : ''}`}>
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
+          
           <li><Link to="/specials">Menu</Link></li>
           <li>
             {token 
@@ -30,11 +30,11 @@ export default function Nav({ token }) {
               : <Link to="/login">Reservations</Link>
             }
           </li>
-          <li><Link to="/cart">Order Online</Link></li>
+          
           <li>
-            {token 
-              ? <Link to="/profile">Profile</Link> 
-              : <Link to="/login">Login / Register</Link>
+            {
+              
+              <Link to="/login">Login / Register</Link>
             }
           </li>
         </ul>

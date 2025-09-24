@@ -24,7 +24,7 @@ export default function Specials() {
         <meta name="og:title" content="Specials plates to order at Little Lemon"/>
         <meta name="og:description" content="Menù with specials plates highlightened"/>
       </Helmet>
-      <h2>Specials</h2>
+      <h2 style={{ textAlign: "center", color: "#495e57", marginBottom: "2rem" }}>Specials</h2>
       <div className="specials-grid">
         {dishes.map((dish) => (
           <div key={dish.name} className="card">

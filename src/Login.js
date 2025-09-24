@@ -12,49 +12,71 @@ export default function Login({ handleLogin, setToken, setUser }) {
     e.preventDefault();
     const success = handleLogin(form.email, form.password);
     if (success) {
-      setMessage("Login effettuato con successo!");
+      setMessage("✅ Successful Login");
       navigate("/"); // vai alla home
     } else {
-      setMessage("Email o password non validi");
+      setMessage("❌ Email or password not valid");
     }
   };
 
   return (
-    <div className="reservation-page">
-      <form className="reservation-form" onSubmit={handleSubmit}>
+    <section className="reservation-page" aria-label="Login Section">
+      <form
+        className="reservation-form"
+        onSubmit={handleSubmit}
+        aria-label="Login Form"
+      >
         <h2>Login</h2>
+        <fieldset>
+          <legend>Accesso utente</legend>
 
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              aria-label="Inserisci la tua email"
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              aria-label="Insert your password"
+            />
+          </div>
 
-        <button type="submit" className="btn-primary">Login</button>
-        {message && <p className="message">{message}</p>}
+          <button
+            type="submit"
+            className="btn-primary"
+            aria-label="On Click"
+          >
+            Login
+          </button>
+
+          {message && (
+            <p role="status" aria-live="polite" className="message">
+              {message}
+            </p>
+          )}
+        </fieldset>
       </form>
 
       <p style={{ textAlign: "center", marginTop: "1rem" }}>
-        Non sei ancora registrato? <Link to="/register">Registrati qui</Link>
+        Don't have an account? <Link to="/register">Register here</Link>
       </p>
-    </div>
+    </section>
   );
 }

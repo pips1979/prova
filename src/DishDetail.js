@@ -1,4 +1,3 @@
-
 import salad from './assets/greek salad.jpg';
 import bruschetta from './assets/bruschetta.svg';
 import dessert from './assets/lemon dessert.jpg';
@@ -6,7 +5,6 @@ import dessert from './assets/lemon dessert.jpg';
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useCart } from "./CartContext"; 
-
 
 const dishes = {
   "Greek Salad": {
@@ -34,6 +32,7 @@ export default function DishDetail() {
   const dish = dishes[dishName];
   const { addToCart } = useCart();
   const [selectedExtras, setSelectedExtras] = useState([]);
+  const [message, setMessage] = useState("");
 
   const toggleIngredient = (ingredient) => {
     setSelectedExtras((prev) =>
@@ -53,34 +52,50 @@ export default function DishDetail() {
       img: dish.img,
     };
     addToCart(item);
-    alert(`${dishName} added to cart!`);
+    setMessage(`${dishName} added to cart!`);
   };
 
   return (
-    <section className="dish-detail">
+    <section className="dish-detail" aria-label={`Details for ${dishName}`}>
       <h2>{dishName}</h2>
-      <img src={dish.img} alt={dishName} style={{ maxWidth: "300px" }} />
+      <img
+        src={dish.img}
+        alt={`Image of ${dishName}`}
+        style={{ maxWidth: "300px" }}
+      />
       <p>{dish.description}</p>
 
       {dish.hasExtras && (
-        <>
-          <h3>Add Ingredients ($1 each)</h3>
+        <fieldset>
+          <legend>Add Ingredients ($1 each)</legend>
           {extraIngredients.map((ingredient) => (
-            <label key={ingredient} style={{ display: "block" }}>
+            <div key={ingredient}>
               <input
                 type="checkbox"
+                id={ingredient}
                 checked={selectedExtras.includes(ingredient)}
                 onChange={() => toggleIngredient(ingredient)}
-              />{" "}
-              {ingredient}
-            </label>
+                aria-label={`Add ${ingredient}`}
+              />
+              <label htmlFor={ingredient}>{ingredient}</label>
+            </div>
           ))}
-        </>
+        </fieldset>
       )}
 
-      <button onClick={handleAdd} style={{ marginTop: "1rem" }}>
+      <button
+        onClick={handleAdd}
+        style={{ marginTop: "1rem" }}
+        aria-label={`Add ${dishName} to cart`}
+      >
         Add for {dish.hasExtras ? totalPrice : basePrice}$
       </button>
+
+      {message && (
+        <p role="status" aria-live="polite" style={{ marginTop: "1rem" }}>
+          {message}
+        </p>
+      )}
     </section>
   );
 }
